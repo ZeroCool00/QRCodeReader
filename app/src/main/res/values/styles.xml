@@ -13,4 +13,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MyMaterialThemeFull" parent="MyMaterialTheme.Base">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
 </resources>

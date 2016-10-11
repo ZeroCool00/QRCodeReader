@@ -17,7 +17,7 @@ import com.http5000.qrreader.android.fragment.OneFragment;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
-    AppCompatButton btnScan;
+    AppCompatButton btnScan, btnSAveList;
     LinearLayout layout;
     private static final int MY_PERMISSION_REQUEST_CAMERA = 0;
 
@@ -41,6 +41,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 } else {
                     requestCameraPermission();
                 }
+            }
+        });
+
+        btnSAveList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
@@ -79,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private void initialization() {
         btnScan = (AppCompatButton)findViewById(R.id.btnScan);
+        btnSAveList = (AppCompatButton) findViewById(R.id.btnList);
         layout = (LinearLayout) findViewById(R.id.main_layout);
     }
 }
