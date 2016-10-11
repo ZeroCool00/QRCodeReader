@@ -1,6 +1,7 @@
 package com.http5000.qrreader.android.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -47,7 +48,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         btnSAveList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(MainActivity.this, ScanList.class);
+                startActivity(intent);
             }
         });
     }

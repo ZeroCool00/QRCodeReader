@@ -1,9 +1,12 @@
 package com.http5000.qrreader.android.fragment;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.widget.AppCompatButton;
@@ -18,8 +21,12 @@ import android.widget.TextView;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.http5000.qrreader.android.R;
 import com.http5000.qrreader.android.helper.Model;
+import com.http5000.qrreader.android.helper.ObjectSerializer;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class OneFragment extends android.support.v4.app.DialogFragment implements QRCodeReaderView.OnQRCodeReadListener {
@@ -103,13 +110,31 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
                             .startChooser();
                 }
             });
+
+            model = new Model();
+            model.setQrText(text);
+            models.add(model);
+
+            addTask(model);
         }
 
-        model = new Model();
-        model.setQrText(text);
-        models.add(model);
+    }
 
-     //   tinyDB.putListObject("allScan", models);
+    public void addTask(Model t) {
+        if (null == models) {
+            models = new ArrayList<Model>();
+        }
+        models.add(t);
+
+        // save the task list to preference
+        SharedPreferences prefs = getActivity().getSharedPreferences("SHARED_PREFS_FILE", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        try {
+            editor.putString("TASKS", ObjectSerializer.serialize(models));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        editor.commit();
     }
 
     @Override
