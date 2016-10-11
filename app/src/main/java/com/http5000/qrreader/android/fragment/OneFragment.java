@@ -1,8 +1,12 @@
 package com.http5000.qrreader.android.fragment;
 
+import android.app.SearchManager;
+import android.content.Intent;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.ShareCompat;
+import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +27,8 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
     private TextView resultTextView;
     private PointsOverlayView pointsOverlayView;
     private CheckBox flashlightCheckBox;
+
+    private AppCompatButton btnSearch, btnShare, btnSave;
     Model model;
     ArrayList<Model> models = new ArrayList<Model>();
 
@@ -47,6 +53,9 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
         resultTextView = (TextView) v.findViewById(R.id.result_text_view);
         pointsOverlayView = (PointsOverlayView) v.findViewById(R.id.points_overlay_view);
         flashlightCheckBox = (CheckBox) v.findViewById(R.id.flashlight_checkbox);
+        btnSearch = (AppCompatButton) v.findViewById(R.id.btnSearchWeb);
+        btnSave = (AppCompatButton) v.findViewById(R.id.btnSaveToContact);
+        btnShare = (AppCompatButton) v.findViewById(R.id.btnShareLink);
 
         flashlightCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -65,13 +74,39 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
     }
 
     @Override
-    public void onQRCodeRead(String text, PointF[] points) {
+    public void onQRCodeRead(final String text, PointF[] points) {
         resultTextView.setText(text);
         pointsOverlayView.setPoints(points);
 
+        if(text.length() > 0){
+            btnSearch.setVisibility(View.VISIBLE);
+            btnShare.setVisibility(View.VISIBLE);
+            btnSave.setVisibility(View.VISIBLE);
+
+            btnSearch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent search = new Intent(Intent.ACTION_WEB_SEARCH);
+                    search.putExtra(SearchManager.QUERY, text);
+                    startActivity(search);
+                }
+            });
+
+            btnShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ShareCompat.IntentBuilder
+                            .from(getActivity()) // getActivity() or activity field if within Fragment
+                            .setText(text)
+                            .setType("text/plain") // most general text sharing MIME type
+                            .setChooserTitle("Share QR-Code Content")
+                            .startChooser();
+                }
+            });
+        }
+
         model = new Model();
         model.setQrText(text);
-
         models.add(model);
 
      //   tinyDB.putListObject("allScan", models);
