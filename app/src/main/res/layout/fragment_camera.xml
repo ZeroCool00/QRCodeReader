@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.MainActivity">
 
     <com.dlazaro66.qrcodereaderview.QRCodeReaderView
@@ -10,18 +11,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.http5000.qrreader.android.helper.PointsOverlayView
-        android:id="@+id/points_overlay_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginTop="18dp"
+        android:src="@drawable/ic_arrow_back_black_24dp"
+        local:backgroundTint="@android:color/transparent"
+        local:borderWidth="0dp"
+        local:elevation="0dp"
+        local:fabSize="mini"
+        local:rippleColor="@color/colorPrimaryDark"
+        local:theme="@style/Base.Widget.AppCompat.ImageButton" />
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/result_text_view"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="40dp"
         android:autoLink="all"
         android:background="#55000000"
         android:clickable="true"
@@ -71,6 +84,13 @@
         android:text="On/Off flashlight"
         android:textColor="#ffffff"
         android:textSize="14sp" />
+
+    <com.http5000.qrreader.android.helper.PointsOverlayView
+        android:id="@+id/points_overlay_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>
