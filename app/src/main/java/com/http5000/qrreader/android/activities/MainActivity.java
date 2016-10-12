@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -63,6 +64,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Snackbar.make(layout, "Camera permission was granted.", Snackbar.LENGTH_SHORT).show();
 
+            new Handler().post(new Runnable() {
+                public void run() {
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+                    OneFragment newFragment = OneFragment.newInstance();
+                    newFragment.show(ft, "dialog");
+                }
+            });
         } else {
             Snackbar.make(layout, "Camera permission request was denied.", Snackbar.LENGTH_SHORT)
                     .show();

@@ -1,12 +1,9 @@
 package com.http5000.qrreader.android.fragment;
 
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.widget.AppCompatButton;
@@ -21,12 +18,12 @@ import android.widget.TextView;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.http5000.qrreader.android.R;
 import com.http5000.qrreader.android.helper.Model;
-import com.http5000.qrreader.android.helper.ObjectSerializer;
+import com.http5000.qrreader.android.helper.PointsOverlayView;
+import com.http5000.qrreader.android.helper.RealmController;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+
+import io.realm.Realm;
 
 
 public class OneFragment extends android.support.v4.app.DialogFragment implements QRCodeReaderView.OnQRCodeReadListener {
@@ -34,8 +31,9 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
     private TextView resultTextView;
     private PointsOverlayView pointsOverlayView;
     private CheckBox flashlightCheckBox;
+    private Realm realm;
 
-    private AppCompatButton btnSearch, btnShare, btnSave;
+    private AppCompatButton btnSearch, btnShare;
     Model model;
     ArrayList<Model> models = new ArrayList<Model>();
 
@@ -56,16 +54,18 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
         View v = inflater.inflate(R.layout.fragment_camera, container, false);
         v.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
 
-        qrCodeReaderView = (QRCodeReaderView)v.findViewById(R.id.qrdecoderview);
+        this.realm = RealmController.with(getActivity()).getRealm();
+
+        qrCodeReaderView = (QRCodeReaderView) v.findViewById(R.id.qrdecoderview);
         resultTextView = (TextView) v.findViewById(R.id.result_text_view);
         pointsOverlayView = (PointsOverlayView) v.findViewById(R.id.points_overlay_view);
         flashlightCheckBox = (CheckBox) v.findViewById(R.id.flashlight_checkbox);
         btnSearch = (AppCompatButton) v.findViewById(R.id.btnSearchWeb);
-        btnSave = (AppCompatButton) v.findViewById(R.id.btnSaveToContact);
         btnShare = (AppCompatButton) v.findViewById(R.id.btnShareLink);
 
         flashlightCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 qrCodeReaderView.setTorchEnabled(isChecked);
             }
         });
@@ -85,10 +85,11 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
         resultTextView.setText(text);
         pointsOverlayView.setPoints(points);
 
-        if(text.length() > 0){
+        if (text.length() > 0) {
+            qrCodeReaderView.stopCamera();
             btnSearch.setVisibility(View.VISIBLE);
             btnShare.setVisibility(View.VISIBLE);
-            btnSave.setVisibility(View.VISIBLE);
+
 
             btnSearch.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -115,33 +116,22 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
             model.setQrText(text);
             models.add(model);
 
-            addTask(model);
+            for(Model b : models){
+                realm.beginTransaction();
+                realm.copyToRealm(model);
+                realm.commitTransaction();
+            }
+
+
         }
 
-    }
-
-    public void addTask(Model t) {
-        if (null == models) {
-            models = new ArrayList<Model>();
-        }
-        models.add(t);
-
-        // save the task list to preference
-        SharedPreferences prefs = getActivity().getSharedPreferences("SHARED_PREFS_FILE", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        try {
-            editor.putString("TASKS", ObjectSerializer.serialize(models));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        editor.commit();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        if(qrCodeReaderView != null) {
+        if (qrCodeReaderView != null) {
             qrCodeReaderView.startCamera();
         }
     }

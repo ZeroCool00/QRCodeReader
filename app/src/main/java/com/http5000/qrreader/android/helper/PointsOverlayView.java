@@ -1,4 +1,4 @@
-package com.http5000.qrreader.android.fragment;
+package com.http5000.qrreader.android.helper;
 
 import android.content.Context;
 import android.graphics.Canvas;
