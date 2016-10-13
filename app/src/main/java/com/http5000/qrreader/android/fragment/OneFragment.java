@@ -21,10 +21,13 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
+import com.google.zxing.client.result.VCardResultParser;
 import com.http5000.qrreader.android.R;
 import com.http5000.qrreader.android.helper.Model;
 import com.http5000.qrreader.android.helper.PointsOverlayView;
 import com.http5000.qrreader.android.helper.RealmController;
+
+import net.glxn.qrgen.core.scheme.VCard;
 
 import java.util.ArrayList;
 import java.util.logging.Handler;
@@ -115,12 +118,7 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
             btnShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ShareCompat.IntentBuilder
-                            .from(getActivity()) // getActivity() or activity field if within Fragment
-                            .setText(text)
-                            .setType("text/plain") // most general text sharing MIME type
-                            .setChooserTitle("Share QR-Code Content")
-                            .startChooser();
+                    VCard vCard = new VCard(text);
                 }
             });
 
