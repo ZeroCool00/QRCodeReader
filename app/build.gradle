@@ -37,6 +37,5 @@ dependencies {
     compile ('com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.1@aar'){
             transitive = true
         }
-
-    compile 'com.github.kenglxn.QRGen:android:2.2.0'
+    compile 'com.googlecode.ez-vcard:ez-vcard:0.10.0'
 }
