@@ -35,6 +35,7 @@ import java.util.List;
 
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
+import ezvcard.io.text.VCardWriter;
 import io.realm.Realm;
 
 
@@ -68,7 +69,6 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
         View v = inflater.inflate(R.layout.fragment_camera, container, false);
         v.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
 
-        File vcfFile = new File(getActivity().getExternalFilesDir(null), "generated.vcf");
         this.realm = RealmController.with(getActivity()).getRealm();
 
         qrCodeReaderView = (QRCodeReaderView) v.findViewById(R.id.qrdecoderview);
@@ -124,23 +124,39 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
                 @Override
                 public void onClick(View v) {
 
-                    if(checkandRequestPermission()){
+                    if (checkandRequestPermission()) {
 
-                        Toast.makeText(getActivity(), "Working on it", Toast.LENGTH_LONG).show();
-                        /*VCard vCard = Ezvcard.parse(text).first();
+                        VCard vCard = Ezvcard.parse(text).first();
 
                         File vcfFile = new File(getActivity().getExternalFilesDir(null), "generated.vcf");
 
+                        if (!vcfFile.exists()) {
+                            vcfFile.mkdirs();
+                        }
+
+                        VCardWriter writer = null;
                         try {
-                            vCard.write(vcfFile);
+                            writer = new VCardWriter(vcfFile, vCard.getVersion());
+                            writer.write(vCard);
                         } catch (IOException e) {
                             e.printStackTrace();
+                        } finally {
+                            if (writer != null) {
+                                try {
+                                    writer.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
+
 
                         Intent i = new Intent();
                         i.setAction(android.content.Intent.ACTION_VIEW);
                         i.setDataAndType(Uri.fromFile(vcfFile), "text/x-vcard");
-                        startActivity(i);*/
+                        startActivity(i);
+
+                        Toast.makeText(getActivity(), "vCard generated in notification.. you can save it later", Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -188,7 +204,6 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
     }
 
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -209,8 +224,8 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
     @Override
     public void onClick(View v) {
         int id = v.getId();
-         if (id == R.id.back_button) {
-           getDialog().dismiss();
+        if (id == R.id.back_button) {
+            getDialog().dismiss();
         }
     }
 }
