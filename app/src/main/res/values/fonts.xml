@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--++++++++++++++++++++++++++-->
+    <!--added on API 16 (JB - 4.1)-->
+    <!--++++++++++++++++++++++++++-->
+    <!--the default font-->
+    <string name="fontFamily__roboto_regular">sans-serif</string>
+    <string name="fontFamily__roboto_light">sans-serif-light</string>
+    <string name="fontFamily__roboto_condensed">sans-serif-condensed</string>
+
+    <!--+++++++++++++++++++++++++++++-->
+    <!--added on API 17 (JBMR1 - 4.2)-->
+    <!--+++++++++++++++++++++++++++++-->
+    <string name="fontFamily__roboto_thin">sans-serif-thin</string>
+
+    <!--+++++++++++++++++++++++++++-->
+    <!--added on Lollipop (LL- 5.0)-->
+    <!--+++++++++++++++++++++++++++-->
+    <string name="fontFamily__roboto_medium">sans-serif-medium</string>
+    <string name="fontFamily__roboto_black">sans-serif-black</string>
+    <string name="fontFamily__roboto_condensed_light">sans-serif-condensed-light</string>
+
+</resources>

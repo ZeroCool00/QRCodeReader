@@ -1,7 +1,6 @@
 package com.http5000.qrreader.android.fragment;
 
 import android.Manifest;
-import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -30,7 +29,6 @@ import com.http5000.qrreader.android.helper.Model;
 import com.http5000.qrreader.android.helper.PointsOverlayView;
 import com.http5000.qrreader.android.helper.RealmController;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -46,19 +44,18 @@ import io.realm.Realm;
 
 
 public class OneFragment extends DialogFragment implements QRCodeReaderView.OnQRCodeReadListener, View.OnClickListener {
+    private static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
+    FloatingActionButton backButton;
+    Model model;
+    CameraManager cameraManager;
+    ArrayList<Model> models = new ArrayList<Model>();
+    Context context;
     private QRCodeReaderView qrCodeReaderView;
     private TextView resultTextView;
     private PointsOverlayView pointsOverlayView;
     private CheckBox flashlightCheckBox;
     private Realm realm;
-    FloatingActionButton backButton;
     private AppCompatButton btnSearch, btnShare, btnNewScan;
-    Model model;
-    CameraManager cameraManager;
-    ArrayList<Model> models = new ArrayList<Model>();
-    private static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
-    Context context;
-
 
     public static OneFragment newInstance() {
         OneFragment fragmentFullScreen = new OneFragment();
@@ -174,8 +171,6 @@ public class OneFragment extends DialogFragment implements QRCodeReaderView.OnQR
                         i.setAction(android.content.Intent.ACTION_VIEW);
                         i.setDataAndType(Uri.fromFile(vcfFile), "text/x-vcard");
                         startActivity(i);
-
-                       // Toast.makeText(getActivity(), "vCard generated in notification.. you can save it later", Toast.LENGTH_LONG).show();
                     }
                 }
             });
