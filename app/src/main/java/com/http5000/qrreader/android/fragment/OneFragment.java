@@ -2,7 +2,6 @@ package com.http5000.qrreader.android.fragment;
 
 import android.Manifest;
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PointF;
@@ -23,7 +22,6 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
-import com.google.zxing.client.android.camera.CameraManager;
 import com.http5000.qrreader.android.R;
 import com.http5000.qrreader.android.helper.Model;
 import com.http5000.qrreader.android.helper.PointsOverlayView;
@@ -47,9 +45,7 @@ public class OneFragment extends DialogFragment implements QRCodeReaderView.OnQR
     private static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
     FloatingActionButton backButton;
     Model model;
-    CameraManager cameraManager;
     ArrayList<Model> models = new ArrayList<Model>();
-    Context context;
     private QRCodeReaderView qrCodeReaderView;
     private TextView resultTextView;
     private PointsOverlayView pointsOverlayView;
@@ -165,8 +161,6 @@ public class OneFragment extends DialogFragment implements QRCodeReaderView.OnQR
                                 }
                             }
                         }
-
-
                         Intent i = new Intent();
                         i.setAction(android.content.Intent.ACTION_VIEW);
                         i.setDataAndType(Uri.fromFile(vcfFile), "text/x-vcard");
@@ -174,7 +168,6 @@ public class OneFragment extends DialogFragment implements QRCodeReaderView.OnQR
                     }
                 }
             });
-
             model = new Model();
             model.setQrText(resultTextView.getText().toString());
             model.setDate(getDateTime().toString());
