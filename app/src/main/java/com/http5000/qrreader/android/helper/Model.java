@@ -1,9 +1,6 @@
 package com.http5000.qrreader.android.helper;
 
-import java.io.Serializable;
-
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
 
 /**
@@ -15,6 +12,10 @@ public class Model extends RealmObject {
 
     private String qrText;
     private String date;
+
+    public Model() {
+        super();
+    }
 
     public String getDate() {
         return date;
@@ -30,10 +31,6 @@ public class Model extends RealmObject {
 
     public void setQrText(String qrText) {
         this.qrText = qrText;
-    }
-
-    public Model() {
-        super();
     }
 
 }
