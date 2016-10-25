@@ -1,7 +1,9 @@
 package com.http5000.qrreader.android.fragment;
 
 import android.Manifest;
+import android.app.Fragment;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PointF;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
@@ -19,9 +22,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
+import com.google.zxing.client.android.camera.CameraManager;
 import com.http5000.qrreader.android.R;
 import com.http5000.qrreader.android.helper.Model;
 import com.http5000.qrreader.android.helper.PointsOverlayView;
@@ -30,7 +33,10 @@ import com.http5000.qrreader.android.helper.RealmController;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import ezvcard.Ezvcard;
@@ -39,17 +45,19 @@ import ezvcard.io.text.VCardWriter;
 import io.realm.Realm;
 
 
-public class OneFragment extends android.support.v4.app.DialogFragment implements QRCodeReaderView.OnQRCodeReadListener, View.OnClickListener {
+public class OneFragment extends DialogFragment implements QRCodeReaderView.OnQRCodeReadListener, View.OnClickListener {
     private QRCodeReaderView qrCodeReaderView;
     private TextView resultTextView;
     private PointsOverlayView pointsOverlayView;
     private CheckBox flashlightCheckBox;
     private Realm realm;
     FloatingActionButton backButton;
-    private AppCompatButton btnSearch, btnShare;
+    private AppCompatButton btnSearch, btnShare, btnNewScan;
     Model model;
+    CameraManager cameraManager;
     ArrayList<Model> models = new ArrayList<Model>();
     private static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
+    Context context;
 
 
     public static OneFragment newInstance() {
@@ -77,6 +85,7 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
         flashlightCheckBox = (CheckBox) v.findViewById(R.id.flashlight_checkbox);
         btnSearch = (AppCompatButton) v.findViewById(R.id.btnSearchWeb);
         btnShare = (AppCompatButton) v.findViewById(R.id.btnShareLink);
+        btnNewScan = (AppCompatButton) v.findViewById(R.id.btnReload);
         backButton = (FloatingActionButton) v.findViewById(R.id.back_button);
         backButton.setOnClickListener(this);
 
@@ -100,16 +109,29 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
 
     @Override
     public void onQRCodeRead(final String text, PointF[] points) {
-        resultTextView.setText(text);
         pointsOverlayView.setPoints(points);
 
-
         if (text.length() > 0 && !text.isEmpty()) {
+            resultTextView.setText(text);
             qrCodeReaderView.stopCamera();
             resultTextView.setVisibility(View.VISIBLE);
             btnSearch.setVisibility(View.VISIBLE);
             btnShare.setVisibility(View.VISIBLE);
+            btnNewScan.setVisibility(View.VISIBLE);
 
+            btnNewScan.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+                    OneFragment newFragment = OneFragment.newInstance();
+                    newFragment.show(ft, "dialog");
+
+                    getDialog().dismiss();
+
+
+                }
+            });
 
             btnSearch.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -130,9 +152,6 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
 
                         File vcfFile = new File(getActivity().getExternalFilesDir(null), "generated.vcf");
 
-                        if (!vcfFile.exists()) {
-                            vcfFile.mkdirs();
-                        }
 
                         VCardWriter writer = null;
                         try {
@@ -156,18 +175,24 @@ public class OneFragment extends android.support.v4.app.DialogFragment implement
                         i.setDataAndType(Uri.fromFile(vcfFile), "text/x-vcard");
                         startActivity(i);
 
-                        Toast.makeText(getActivity(), "vCard generated in notification.. you can save it later", Toast.LENGTH_LONG).show();
+                       // Toast.makeText(getActivity(), "vCard generated in notification.. you can save it later", Toast.LENGTH_LONG).show();
                     }
                 }
             });
 
             model = new Model();
             model.setQrText(resultTextView.getText().toString());
+            model.setDate(getDateTime().toString());
             realm.beginTransaction();
             realm.copyToRealm(model);
             realm.commitTransaction();
         }
+    }
 
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 
     private boolean checkandRequestPermission() {

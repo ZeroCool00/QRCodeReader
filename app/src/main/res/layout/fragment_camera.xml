@@ -11,6 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <com.http5000.qrreader.android.helper.PointsOverlayView
+        android:id="@+id/points_overlay_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/back_button"
         android:layout_width="wrap_content"
@@ -45,6 +51,20 @@
         android:textSize="14sp"
         android:visibility="gone" />
 
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btnReload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="230dp"
+        android:layout_marginLeft="20dp"
+        android:background="#55000000"
+        android:drawableLeft="@drawable/ic_fingerprint_black_24dp"
+        android:padding="10dp"
+        android:text="@string/reload"
+        android:textColor="#ffffff"
+        android:visibility="gone" />
+
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btnSearchWeb"
@@ -56,7 +76,7 @@
         android:background="#55000000"
         android:drawableLeft="@drawable/ic_public_black_24dp"
         android:padding="10dp"
-        android:text="Ouvrir dans le navigateur"
+        android:text="@string/searchOnWeb"
         android:textColor="#ffffff"
         android:visibility="gone" />
 
@@ -70,7 +90,7 @@
         android:background="#55000000"
         android:drawableLeft="@drawable/ic_contact_phone_black_24dp"
         android:padding="10dp"
-        android:text="  Enregistrer dans mes contacts"
+        android:text="@string/SaveInContact"
         android:textColor="#ffffff"
         android:visibility="gone" />
 
@@ -82,16 +102,11 @@
         android:background="#99000000"
         android:checked="false"
         android:padding="16dp"
-        android:text="On/Off flashlight"
+        android:text="FlashLight On/Off"
         android:textColor="#ffffff"
         android:textSize="14sp" />
 
-    <com.http5000.qrreader.android.helper.PointsOverlayView
-        android:id="@+id/points_overlay_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/result_text_view" />
+
 
 
 </RelativeLayout>

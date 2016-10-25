@@ -2,8 +2,10 @@
     <string name="app_name">QR Reader</string>
     <string name="camera">Camera</string>
     <string name="scan">Scan</string>
-    <string name="scanList">Historique</string>
+    <string name="scanList">History</string>
     <string name="search">Search</string>
-    <string name="share">Share</string>
     <string name="delete">Delete</string>
+    <string name="searchOnWeb"> &#160;Search on Web</string>
+    <string name="SaveInContact"> &#160;Save to Contact</string>
+    <string name="reload">New Scan</string>
 </resources>
